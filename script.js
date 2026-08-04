@@ -48,7 +48,7 @@ window.addEventListener("scroll",()=>{
 
     if(window.scrollY>300){
 
-        topBtn.style.display="block";
+        topBtn.style.display="flex";
 
     }else{
 
@@ -88,3 +88,52 @@ entry.target.classList.add("show");
 });
 
 hiddenElements.forEach((el)=>observer.observe(el));
+// Counter Animation
+
+const counters = document.querySelectorAll(".counter");
+
+const counterObserver = new IntersectionObserver((entries) => {
+
+    entries.forEach(entry => {
+
+        if (entry.isIntersecting) {
+
+            const counter = entry.target;
+            const target = Number(counter.dataset.target);
+            const plus = counter.dataset.plus === "true";
+
+            let count = 0;
+
+            const increment = Math.ceil(target / 40);
+
+            const updateCounter = () => {
+
+                if (count < target) {
+
+                    count += increment;
+
+                    if (count > target) count = target;
+
+                    counter.innerText = count;
+
+                    requestAnimationFrame(updateCounter);
+
+                } else {
+
+                    counter.innerText = plus ? target + "+" : target;
+
+                }
+
+            };
+
+            updateCounter();
+
+            counterObserver.unobserve(counter);
+
+        }
+
+    });
+
+});
+
+counters.forEach(counter => counterObserver.observe(counter));
